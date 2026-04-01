@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibe Coding &amp; Claude Code — Project Structure File</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg-primary:     #0f1117;
+      --color-bg-secondary:   #1a1d27;
+      --color-bg-accent:      #1e2235;
+      --color-text-primary:   #e8eaf0;
+      --color-text-secondary: #9099b0;
+      --color-text-muted:     #555e78;
+      --color-accent-primary:   #c084fc;
+      --color-accent-secondary: #3dd68c;
+      --color-accent-warning:   #f5a623;
+      --color-accent-danger:    #e05c5c;
+      --color-border:         #2a2f45;
+      --color-border-accent:  #3a4a7a;
+      --font-heading: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      --font-body:    'Inter', 'Segoe UI', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      --shadow-card:  0 4px 24px rgba(0,0,0,0.4);
+      --shadow-glow:  0 0 20px rgba(192,132,252,0.2);
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.65;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+    }
+
+    .header-left { display: flex; align-items: center; gap: 0.75rem; }
+
+    .header-badge {
+      background: linear-gradient(135deg, var(--color-accent-primary), #9333ea);
+      color: white;
+      padding: 0.2rem 0.7rem;
+      border-radius: 99px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    header h1 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .header-meta {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* ===== LAYOUT ===== */
+    .app-layout {
+      display: flex;
+      flex: 1;
+    }
+
+    /* ===== SIDEBAR ===== */
+    nav.sidebar {
+      width: 220px;
+      min-width: 220px;
+      background: var(--color-bg-secondary);
+      border-right: 1px solid var(--color-border);
+      padding: 1.5rem 0 2rem;
+      position: sticky;
+      top: 53px;
+      height: calc(100vh - 53px);
+      overflow-y: auto;
+    }
+
+    .nav-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      padding: 0 1.25rem;
+      margin: 1.25rem 0 0.4rem;
+    }
+
+    .nav-label:first-child { margin-top: 0; }
+
+    nav.sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.45rem 1.25rem;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.855rem;
+      border-left: 3px solid transparent;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    nav.sidebar a:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-accent);
+    }
+
+    nav.sidebar a.active {
+      color: var(--color-accent-primary);
+      border-left-color: var(--color-accent-primary);
+      background: rgba(192, 132, 252, 0.08);
+      font-weight: 500;
+    }
+
+    .nav-icon { font-size: 0.85rem; width: 18px; text-align: center; }
+
+    /* ===== MAIN ===== */
+    main {
+      flex: 1;
+      padding: 2.5rem 3rem 4rem;
+      max-width: 860px;
+      min-width: 0;
+    }
+
+    /* ===== SECTIONS ===== */
+    .section { display: none; }
+    .section.active {
+      display: block;
+      animation: fadeUp 0.22s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 0.35rem;
+      line-height: 1.2;
+    }
+
+    .section-title span { color: var(--color-accent-primary); }
+
+    .section-desc {
+      color: var(--color-text-secondary);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin: 2rem 0 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    h3::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    p { color: var(--color-text-secondary); margin-bottom: 1rem; font-size: 0.9rem; }
+
+    /* ===== HIGHLIGHT BOX ===== */
+    .highlight-box {
+      background: rgba(192, 132, 252, 0.07);
+      border: 1px solid var(--color-border-accent);
+      border-left: 4px solid var(--color-accent-primary);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .highlight-box p { margin: 0; font-size: 0.9rem; }
+    .highlight-box strong { color: var(--color-accent-primary); }
+
+    .quote-author {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      font-family: var(--font-mono);
+      margin-top: 0.5rem;
+      margin-bottom: 1.75rem;
+    }
+
+    /* ===== CARDS ===== */
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .card-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+    .card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .card-purple { border-top: 3px solid var(--color-accent-primary); }
+    .card-green  { border-top: 3px solid var(--color-accent-secondary); }
+    .card-orange { border-top: 3px solid var(--color-accent-warning); }
+    .card-red    { border-top: 3px solid var(--color-accent-danger); }
+
+    .card-icon { font-size: 1.4rem; margin-bottom: 0.6rem; }
+
+    .card h4 {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 0.35rem;
+    }
+
+    .card p { font-size: 0.82rem; margin: 0; }
+
+    /* ===== STYLED LIST ===== */
+    ul.styled {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1.75rem;
+    }
+
+    ul.styled li {
+      padding: 0.55rem 0 0.55rem 1.5rem;
+      position: relative;
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+      font-size: 0.875rem;
+    }
+
+    ul.styled li:last-child { border-bottom: none; }
+
+    ul.styled li::before {
+      content: '▸';
+      color: var(--color-accent-primary);
+      position: absolute;
+      left: 0;
+      top: 0.55rem;
+    }
+
+    ul.styled li strong { color: var(--color-text-primary); }
+
+    code {
+      font-family: var(--font-mono);
+      background: var(--color-bg-accent);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.1em 0.45em;
+      font-size: 0.83em;
+      color: var(--color-accent-secondary);
+    }
+
+    /* ===== CODE BLOCK ===== */
+    .code-block {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .code-block-header {
+      background: var(--color-bg-accent);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .code-block-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--color-accent-primary);
+      font-family: var(--font-mono);
+    }
+
+    .code-block pre {
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.75;
+      color: var(--color-text-primary);
+      margin: 0;
+      white-space: pre;
+    }
+
+    .cm { color: var(--color-text-muted); }
+    .ck { color: var(--color-accent-primary); }
+    .cv { color: var(--color-accent-secondary); }
+    .ch { color: var(--color-accent-warning); font-weight: 700; }
+    .cs { color: #f472b6; }
+
+    /* ===== STEP LIST ===== */
+    .step-list {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1.75rem;
+    }
+
+    .step-list li {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.1rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 28px;
+      min-width: 28px;
+      height: 28px;
+      background: var(--color-accent-primary);
+      color: #0f1117;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .step-body h4 {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 0.2rem;
+    }
+
+    .step-body p { font-size: 0.83rem; margin: 0; }
+
+    /* ===== TABLE ===== */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.75rem;
+      font-size: 0.855rem;
+    }
+
+    .data-table th {
+      background: var(--color-bg-accent);
+      color: var(--color-accent-primary);
+      font-weight: 700;
+      padding: 0.7rem 1rem;
+      text-align: left;
+      border-bottom: 2px solid var(--color-border-accent);
+      font-size: 0.8rem;
+    }
+
+    .data-table td {
+      padding: 0.7rem 1rem;
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: top;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table td:first-child { color: var(--color-text-primary); font-weight: 500; white-space: nowrap; }
+
+    /* ===== TAGS ===== */
+    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.75rem; }
+
+    .tag {
+      display: inline-block;
+      background: var(--color-bg-accent);
+      border: 1px solid var(--color-border-accent);
+      color: var(--color-accent-primary);
+      border-radius: 99px;
+      padding: 0.2em 0.8em;
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    .tag-green {
+      color: var(--color-accent-secondary);
+      border-color: rgba(61, 214, 140, 0.25);
+      background: rgba(61, 214, 140, 0.06);
+    }
+
+    /* ===== DIVIDER ===== */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--color-border);
+      margin: 2rem 0;
+    }
+
+    /* ===== PROMPT EXAMPLE ===== */
+    .prompt-example {
+      background: var(--color-bg-accent);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 0.9rem 1.1rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--color-accent-secondary);
+      margin-bottom: 0.6rem;
+    }
+
+    .prompt-label {
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.3rem;
+      font-family: var(--font-mono);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      nav.sidebar { display: none; }
+      main { padding: 1.5rem 1.25rem 3rem; }
+      .card-grid, .card-grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <span class="header-badge">Claude Code</span>
+    <h1>Vibe Coding &amp; Project Structure File</h1>
+  </div>
+  <div class="header-meta">Hieu Doan · 01/04/2026</div>
+</header>
+
+<div class="app-layout">
+
+  <nav class="sidebar">
+    <div class="nav-label">Khái niệm</div>
+    <a class="active" data-target="intro">
+      <span class="nav-icon">⚡</span> Vibe Coding là gì?
+    </a>
+    <a data-target="claude-code">
+      <span class="nav-icon">🤖</span> Claude Code
+    </a>
+
+    <div class="nav-label">Project Setup</div>
+    <a data-target="claude-md">
+      <span class="nav-icon">📄</span> CLAUDE.md
+    </a>
+    <a data-target="structure">
+      <span class="nav-icon">🗂️</span> Cấu trúc hiệu quả
+    </a>
+
+    <div class="nav-label">Thực hành</div>
+    <a data-target="workflow">
+      <span class="nav-icon">🔄</span> Workflow thực tế
+    </a>
+    <a data-target="tips">
+      <span class="nav-icon">💡</span> Best Practices
+    </a>
+  </nav>
+
+  <main>
+
+    <!-- ========== SECTION: INTRO ========== -->
+    <div class="section active" id="intro">
+      <h2 class="section-title">Vibe Coding <span>là gì?</span></h2>
+      <p class="section-desc">Lập trình theo ý định — để AI lo phần còn lại.</p>
+
+      <div class="highlight-box">
+        <p><strong>"Vibe coding"</strong> là phong cách lập trình mà bạn mô tả ý định bằng ngôn ngữ tự nhiên, AI sinh ra code, và bạn chỉ cần review và iterate — không cần gõ từng dòng thủ công.</p>
+      </div>
+      <p class="quote-author">— Andrej Karpathy, tháng 2/2025</p>
+
+      <h3>Tại sao nó thay đổi cách làm việc</h3>
+      <div class="card-grid">
+        <div class="card card-purple">
+          <div class="card-icon">🚀</div>
+          <h4>Tốc độ prototype</h4>
+          <p>Từ ý tưởng đến MVP trong vài giờ thay vì vài ngày. AI xử lý boilerplate, bạn tập trung vào logic nghiệp vụ.</p>
+        </div>
+        <div class="card card-purple">
+          <div class="card-icon">🧠</div>
+          <h4>Giảm cognitive load</h4>
+          <p>Không cần nhớ syntax, API docs hay boilerplate patterns — AI làm thay. Bạn chỉ cần biết <em>muốn gì</em>.</p>
+        </div>
+        <div class="card card-green">
+          <div class="card-icon">🎯</div>
+          <h4>Tập trung vào "What"</h4>
+          <p>Chuyển tư duy từ <em>"viết như thế nào"</em> sang <em>"cần đạt được gì"</em> — đúng vai trò của engineer.</p>
+        </div>
+        <div class="card card-green">
+          <div class="card-icon">🔁</div>
+          <h4>Iterate nhanh hơn</h4>
+          <p>Thay đổi, refactor, thử nghiệm mà không sợ tốn thời gian. Feedback loop ngắn lại đáng kể.</p>
+        </div>
+      </div>
+
+      <h3>Vibe Coding vs Traditional Coding</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Khía cạnh</th>
+            <th>Traditional</th>
+            <th>Vibe Coding</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Đầu vào</td>
+            <td>Gõ code thủ công</td>
+            <td>Mô tả bằng ngôn ngữ tự nhiên</td>
+          </tr>
+          <tr>
+            <td>Vai trò engineer</td>
+            <td>Implementer</td>
+            <td>Director + Reviewer</td>
+          </tr>
+          <tr>
+            <td>Tốc độ prototype</td>
+            <td>Hours → Days</td>
+            <td>Minutes → Hours</td>
+          </tr>
+          <tr>
+            <td>Yêu cầu kỹ năng</td>
+            <td>Syntax mastery</td>
+            <td>Problem framing + critical review</td>
+          </tr>
+          <tr>
+            <td>Rủi ro chính</td>
+            <td>Human error, chậm</td>
+            <td>AI hallucination — phải review kỹ</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box">
+        <p><strong>Quan trọng:</strong> Vibe Coding không thay thế kỹ năng engineering — nó <strong>khuếch đại</strong> nó. Engineer giỏi sẽ output tốt hơn nhiều lần. Engineer yếu sẽ tạo ra mess nhanh hơn nhiều lần.</p>
+      </div>
+    </div>
+
+    <!-- ========== SECTION: CLAUDE CODE ========== -->
+    <div class="section" id="claude-code">
+      <h2 class="section-title">Claude Code <span>— Agentic Coding Assistant</span></h2>
+      <p class="section-desc">CLI tool của Anthropic, chạy trực tiếp trong terminal và IDE.</p>
+
+      <div class="highlight-box">
+        <p>Claude Code không chỉ trả lời câu hỏi — nó <strong>tự đọc codebase, tự chạy lệnh, tự sửa file</strong>, và hoàn thành task từ đầu đến cuối với sự giám sát tối thiểu từ phía bạn.</p>
+      </div>
+
+      <h3>Khác gì so với AI chatbot thông thường</h3>
+      <div class="card-grid card-grid-3">
+        <div class="card card-purple">
+          <div class="card-icon">📁</div>
+          <h4>Đọc toàn bộ codebase</h4>
+          <p>Hiểu context của project, không chỉ đoạn code bạn paste vào chat.</p>
+        </div>
+        <div class="card card-purple">
+          <div class="card-icon">⚙️</div>
+          <h4>Chạy lệnh thực tế</h4>
+          <p>Terminal, tests, build, install dependencies — tất cả tự động.</p>
+        </div>
+        <div class="card card-purple">
+          <div class="card-icon">✏️</div>
+          <h4>Sửa file trực tiếp</h4>
+          <p>Edit, create, delete files — không cần copy-paste thủ công.</p>
+        </div>
+      </div>
+
+      <h3>Cách hoạt động trong một task</h3>
+      <ol class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Bạn mô tả yêu cầu</h4>
+            <p>Bằng ngôn ngữ tự nhiên — ngắn gọn hoặc chi tiết tùy bạn và độ phức tạp của task.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Claude đọc context</h4>
+            <p>Tự khám phá codebase, đọc CLAUDE.md, hiểu architecture và conventions của project.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Lên kế hoạch (tùy chọn)</h4>
+            <p>Với task phức tạp, Claude đề xuất approach — bạn approve trước khi nó bắt đầu code.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>Thực thi</h4>
+            <p>Chạy lệnh, sửa file, tạo component — tất cả hiển thị minh bạch để bạn theo dõi.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h4>Bạn review &amp; iterate</h4>
+            <p>Xem diff, chạy thử, cho feedback. Claude adjust nếu có vấn đề.</p>
+          </div>
+        </li>
+      </ol>
+
+      <h3>Tích hợp sẵn có</h3>
+      <div class="tags">
+        <span class="tag">VS Code Extension</span>
+        <span class="tag">JetBrains Extension</span>
+        <span class="tag">Terminal CLI</span>
+        <span class="tag">claude.ai/code</span>
+        <span class="tag-green tag">macOS</span>
+        <span class="tag-green tag">Windows</span>
+        <span class="tag-green tag">Linux</span>
+      </div>
+    </div>
+
+    <!-- ========== SECTION: CLAUDE.md ========== -->
+    <div class="section" id="claude-md">
+      <h2 class="section-title">CLAUDE.md <span>— Project Structure File</span></h2>
+      <p class="section-desc">File context giúp Claude hiểu project của bạn ngay từ lần đầu tiên.</p>
+
+      <div class="highlight-box">
+        <p><strong>CLAUDE.md</strong> là file Markdown đặt ở root của project. Claude Code tự động đọc file này mỗi khi bắt đầu session — đây là cách bạn truyền context, conventions, và quy tắc của project cho AI một lần duy nhất.</p>
+      </div>
+
+      <h3>Tại sao CLAUDE.md quan trọng</h3>
+      <ul class="styled">
+        <li><strong>Nhất quán:</strong> Claude luôn code theo đúng style và conventions của team — không cần nhắc lại mỗi session.</li>
+        <li><strong>Tiết kiệm thời gian:</strong> Không phải giải thích architecture hay tech stack mỗi lần mở conversation mới.</li>
+        <li><strong>Giảm lỗi:</strong> Claude biết những gì cần tránh, những pattern nào đã deprecated trong project.</li>
+        <li><strong>Ưu tiên cao nhất:</strong> Các hướng dẫn trong CLAUDE.md override behavior mặc định của Claude.</li>
+        <li><strong>Onboarding kép:</strong> CLAUDE.md tốt cũng là tài liệu onboarding tốt cho developer mới vào team.</li>
+      </ul>
+
+      <h3>CLAUDE.md được đọc khi nào</h3>
+      <div class="card-grid">
+        <div class="card card-green">
+          <h4>✅ Tự động mỗi session</h4>
+          <p>Claude đọc ngay khi bắt đầu — không cần bạn làm gì thêm hay nhắc đến file này.</p>
+        </div>
+        <div class="card card-green">
+          <h4>✅ Hỗ trợ nhiều layer</h4>
+          <p>Đặt ở root và thêm trong subfolder — Claude đọc tất cả theo context của task đang làm.</p>
+        </div>
+        <div class="card card-orange">
+          <h4>⚠️ Commit lên git</h4>
+          <p>File này nên commit — là tài liệu chung của team. Tuyệt đối không chứa credentials hay secrets.</p>
+        </div>
+        <div class="card card-orange">
+          <h4>⚠️ Cần maintain</h4>
+          <p>CLAUDE.md lỗi thời còn tệ hơn không có. Update ngay khi refactor lớn hoặc thay đổi convention.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SECTION: STRUCTURE ========== -->
+    <div class="section" id="structure">
+      <h2 class="section-title">Cấu trúc <span>CLAUDE.md hiệu quả</span></h2>
+      <p class="section-desc">Viết ngắn gọn, đúng trọng tâm — dưới 200 dòng là lý tưởng.</p>
+
+      <h3>Các phần nên có</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>Phần</th><th>Nội dung</th><th>Mức độ</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Mục đích project</td>
+            <td>2–3 câu: project làm gì, cho ai, scale ra sao</td>
+            <td>Bắt buộc</td>
+          </tr>
+          <tr>
+            <td>Tech stack</td>
+            <td>Ngôn ngữ, framework, database, tools chính</td>
+            <td>Bắt buộc</td>
+          </tr>
+          <tr>
+            <td>Cấu trúc thư mục</td>
+            <td>Sơ đồ cây ngắn gọn + giải thích folder quan trọng</td>
+            <td>Bắt buộc</td>
+          </tr>
+          <tr>
+            <td>Coding conventions</td>
+            <td>Naming, formatting, patterns được dùng và tránh</td>
+            <td>Khuyến nghị</td>
+          </tr>
+          <tr>
+            <td>Common commands</td>
+            <td>Build, test, dev server, migration...</td>
+            <td>Khuyến nghị</td>
+          </tr>
+          <tr>
+            <td>Ghi chú quan trọng</td>
+            <td>Gotchas, quy tắc đặc biệt, những thứ hay bị nhầm</td>
+            <td>Tuỳ project</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Ví dụ thực tế — Next.js project</h3>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-label">CLAUDE.md</span>
+        </div>
+        <pre><span class="ch"># My App — Claude Code Context</span>
+
+<span class="ch">## Mục đích</span>
+E-commerce platform cho SME Việt Nam.
+Stack: Next.js 14 (App Router), Supabase, Tailwind CSS, TypeScript.
+
+<span class="ch">## Cấu trúc</span>
+src/app/          <span class="cm">← App Router pages &amp; layouts</span>
+src/components/   <span class="cm">← UI components (shadcn/ui base)</span>
+src/lib/          <span class="cm">← Utilities, hooks, API clients</span>
+src/types/        <span class="cm">← TypeScript types &amp; interfaces</span>
+supabase/         <span class="cm">← Migrations &amp; edge functions</span>
+
+<span class="ch">## Conventions</span>
+- Component files: PascalCase (UserCard.tsx)
+- Hooks: camelCase với prefix use (useCart.ts)
+- Server components là default — dùng 'use client' chỉ khi cần
+- CSS: Tailwind utility-first, không viết CSS module
+
+<span class="ch">## Commands</span>
+npm run dev       <span class="cm">← Dev server (port 3000)</span>
+npm run build     <span class="cm">← Production build</span>
+npm run test      <span class="cm">← Vitest unit tests</span>
+
+<span class="ch">## Quan trọng — đọc kỹ trước khi code</span>
+- KHÔNG dùng useEffect để fetch data — dùng Server Components
+- Tất cả API calls phải đi qua src/lib/api.ts
+- Supabase RLS phải bật cho mọi table production
+- Không thêm npm package mới nếu chưa hỏi</pre>
+      </div>
+
+      <h3>Những gì KHÔNG nên có</h3>
+      <ul class="styled">
+        <li><strong>Credentials, API keys, secrets</strong> — file này commit lên git, ai cũng đọc được.</li>
+        <li><strong>Quá dài (300+ dòng):</strong> Claude xử lý kém hiệu quả hơn, không phải hiệu quả hơn.</li>
+        <li><strong>Thông tin lỗi thời:</strong> Refactor xong mà không update CLAUDE.md → AI sẽ code theo convention cũ.</li>
+        <li><strong>Giải thích cái AI đã biết:</strong> Không cần giải thích React là gì hay cách dùng async/await.</li>
+      </ul>
+    </div>
+
+    <!-- ========== SECTION: WORKFLOW ========== -->
+    <div class="section" id="workflow">
+      <h2 class="section-title">Workflow <span>Vibe Coding thực tế</span></h2>
+      <p class="section-desc">Quy trình từ đầu đến cuối khi dùng Claude Code cho một feature mới.</p>
+
+      <h3>Setup lần đầu (một lần duy nhất)</h3>
+      <ol class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Cài Claude Code</h4>
+            <p>Cài qua VS Code Extension hoặc CLI. Đăng nhập tài khoản Anthropic.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Tạo CLAUDE.md ở root project</h4>
+            <p>Bắt đầu đơn giản: mục đích, tech stack, cấu trúc folder. Bổ sung dần theo nhu cầu thực tế.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Commit CLAUDE.md vào git</h4>
+            <p>Share cho cả team — đây là tài liệu sống của project, không phải file cá nhân.</p>
+          </div>
+        </li>
+      </ol>
+
+      <hr class="divider">
+
+      <h3>Làm một feature mới</h3>
+      <ol class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Mô tả feature bằng ngôn ngữ tự nhiên</h4>
+            <p>Càng cụ thể càng tốt — nêu rõ UI mong muốn, edge cases, constraint nếu có.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Claude tự khám phá codebase</h4>
+            <p>Tìm component liên quan, hiểu data model, đề xuất approach phù hợp conventions trong CLAUDE.md.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Review plan (với task phức tạp)</h4>
+            <p>Dùng Plan Mode: yêu cầu Claude đề xuất approach trước, confirm xong mới cho thực thi.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>Chạy và kiểm tra</h4>
+            <p>Test thủ công hoặc chạy test suite. Báo lỗi cụ thể cho Claude nếu có vấn đề.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h4>Iterate đến khi đúng</h4>
+            <p>Mô tả lỗi hoặc điều cần thay đổi — Claude fix và bạn review lại. Lặp đến khi xong.</p>
+          </div>
+        </li>
+      </ol>
+
+      <h3>Ví dụ prompt tốt vs không tốt</h3>
+      <p class="prompt-label">✅ Tốt — cụ thể, có context, có constraint</p>
+      <div class="prompt-example">"Thêm validation email vào form đăng ký. Hiện error message inline dưới input, theo đúng style của form login hiện tại. Không dùng thư viện validation mới."</div>
+
+      <p class="prompt-label">❌ Không tốt — quá mơ hồ</p>
+      <div class="prompt-example" style="color:var(--color-accent-danger)">"Fix form đăng ký"</div>
+    </div>
+
+    <!-- ========== SECTION: TIPS ========== -->
+    <div class="section" id="tips">
+      <h2 class="section-title">Best Practices <span>&amp; Tips</span></h2>
+      <p class="section-desc">Những gì thực tế dùng Vibe Coding với Claude Code dạy lại.</p>
+
+      <h3>Về CLAUDE.md</h3>
+      <ul class="styled">
+        <li><strong>Update ngay sau refactor lớn:</strong> CLAUDE.md lỗi thời dẫn đến AI code theo pattern cũ — tệ hơn không có file.</li>
+        <li><strong>Layer theo folder:</strong> Đặt CLAUDE.md con trong thư mục phức tạp (vd: <code>src/payments/CLAUDE.md</code>) cho context cụ thể hơn.</li>
+        <li><strong>Ngắn gọn wins:</strong> File 100 dòng được viết tốt hiệu quả hơn file 400 dòng đầy đủ nhưng loãng.</li>
+        <li><strong>Viết "ghi chú quan trọng" trước:</strong> Những gotchas và anti-patterns thường quan trọng hơn mô tả tech stack.</li>
+      </ul>
+
+      <h3>Về Prompting</h3>
+      <ul class="styled">
+        <li><strong>Cho ví dụ cụ thể:</strong> <code>"Viết theo style như UserCard.tsx"</code> tốt hơn mô tả trừu tượng.</li>
+        <li><strong>Chia nhỏ task lớn:</strong> Thay vì "build toàn bộ checkout flow", chia thành các bước nhỏ, có thể verify từng bước.</li>
+        <li><strong>Dùng Plan Mode:</strong> Với task phức tạp hoặc rủi ro cao, yêu cầu Claude lên kế hoạch trước khi code.</li>
+        <li><strong>Chỉ rõ constraint:</strong> <code>"Không thêm dependency mới"</code>, <code>"Giữ nguyên API contract"</code> — Claude sẽ tuân thủ.</li>
+      </ul>
+
+      <h3>Về Review &amp; Safety</h3>
+      <ul class="styled">
+        <li><strong>Luôn đọc diff:</strong> Vibe coding ≠ blind trust. Review mọi thay đổi trước khi commit, đặc biệt logic business.</li>
+        <li><strong>Chạy tests:</strong> AI có thể pass một chỗ nhưng break chỗ khác — chạy test suite sau mỗi thay đổi lớn.</li>
+        <li><strong>Commit nhỏ và thường xuyên:</strong> Dễ rollback khi cần. <code>git commit</code> sau mỗi feature nhỏ hoạt động được.</li>
+        <li><strong>Không merge code bạn không hiểu:</strong> Nếu không hiểu logic AI sinh ra, đừng đưa vào production trước khi review kỹ.</li>
+      </ul>
+
+      <div class="highlight-box">
+        <p><strong>Bottom line:</strong> CLAUDE.md tốt + prompt rõ ràng + review nghiêm túc = Vibe Coding hiệu quả. Bỏ bất kỳ một trong ba yếu tố này, kết quả sẽ không đáng tin cậy.</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const links = document.querySelectorAll('nav.sidebar a');
+  const sections = document.querySelectorAll('.section');
+
+  function navigate(target) {
+    links.forEach(l => l.classList.remove('active'));
+    sections.forEach(s => s.classList.remove('active'));
+    const link = document.querySelector(`nav.sidebar a[data-target="${target}"]`);
+    const section = document.getElementById(target);
+    if (link) link.classList.add('active');
+    if (section) section.classList.add('active');
+  }
+
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      navigate(link.dataset.target);
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    const active = document.querySelector('nav.sidebar a.active');
+    const all = [...links];
+    const idx = all.indexOf(active);
+    if (e.key === 'ArrowDown' && idx < all.length - 1) navigate(all[idx + 1].dataset.target);
+    if (e.key === 'ArrowUp' && idx > 0) navigate(all[idx - 1].dataset.target);
+  });
+</script>
+
+</body>
+</html>

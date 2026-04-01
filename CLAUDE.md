@@ -1,14 +1,14 @@
 # Presentation Project — Claude Code Context
 
 ## Mục đích project
-Tạo HTML presentations theo yêu cầu. Mỗi presentation là 1 file HTML duy nhất, tự chứa (inline CSS + JS), dùng Reveal.js CDN, dark theme mặc định.
+Tạo HTML presentations theo yêu cầu. Mỗi presentation là 1 file HTML duy nhất, tự chứa (inline CSS + JS), dark theme mặc định. Hỗ trợ 2 định dạng: **slide** (Reveal.js) và **interactive** (HTML tương tác như website).
 
 ## Quy trình làm việc (LUÔN theo thứ tự này)
 
-1. **Đọc config** → `config/presentation.config.yaml`
-2. **Đọc skill** → `skills/SKILL.md`
-3. **Đọc base template** → `templates/dark-base.html`
-4. **Đọc theme** → `themes/dark.css`
+1. **Đọc config** → `presentation.config.yaml`
+2. **Đọc skill** → `SKILL.md`
+3. **Đọc theme** → `dark.css`
+4. **Nếu `format: slide`** → đọc base template `dark-base.html`
 5. **Generate** → output vào `output/<topic-slug>.html`
 
 ## Khi nhận yêu cầu tạo presentation mới
@@ -30,11 +30,12 @@ Nếu người dùng truyền thêm tham số, override config tương ứng.
 **Ví dụ prompt:**
 - `"Tạo presentation về AI trong giáo dục"` → dùng toàn bộ default
 - `"Tạo presentation về blockchain, 12 slides, audience: C-level"` → override slide_count và audience
+- `"Tạo presentation về DevOps, format interactive"` → override format
 
 ## Khi nhận yêu cầu chỉnh sửa visual / template
 
-- Chỉnh sửa `themes/dark.css` nếu là màu sắc / font / spacing
-- Chỉnh sửa `templates/dark-base.html` nếu là layout / structure
+- Chỉnh sửa `dark.css` nếu là màu sắc / font / spacing
+- Chỉnh sửa `dark-base.html` nếu là layout / structure (chỉ ảnh hưởng format `slide`)
 - **Không được** hardcode style vào file output — luôn dùng CSS variables từ theme
 
 ## Cấu trúc file output
