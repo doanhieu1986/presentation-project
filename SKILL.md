@@ -5,6 +5,28 @@ Khi người dùng yêu cầu tạo, chỉnh sửa, hoặc cập nhật một HT
 
 ---
 
+## BƯỚC 0 — Xác định Content Mode
+
+**Trước khi làm gì, kiểm tra xem có file content không:**
+
+```
+content/<topic-slug>.md  hoặc  content/<topic-slug>.txt
+```
+
+### MODE A — Có file content (Brief-driven)
+→ Đọc file, dùng làm nguồn sự thật cho nội dung  
+→ Không tự thêm ý ngoài file trừ khi cần expand bullet  
+→ Ghi chú: `📄 Content source: content/<file>`
+
+### MODE B — Không có file content (Auto-generate)
+→ Claude tự generate dựa trên `topic`, `audience`, `tone`  
+→ Dùng kiến thức chung, cấu trúc theo best practices  
+→ Ghi chú: `🤖 Content: auto-generated`
+
+**Quy tắc ưu tiên:** File content luôn thắng. Nếu có file → luôn dùng MODE A dù prompt không nhắc đến.
+
+---
+
 ## BƯỚC 1 — Parse yêu cầu
 
 Trích xuất các tham số từ prompt người dùng:
@@ -176,9 +198,11 @@ Sau khi sửa template/theme: hỏi người dùng có muốn regenerate file ou
 
 ## Checklist trước khi output
 
+- [ ] Đã kiểm tra `content/` — xác định MODE A hay MODE B
 - [ ] Tất cả `{{PLACEHOLDER}}` đã được thay thế
 - [ ] CSS từ `themes/dark.css` đã được inline
 - [ ] Không còn comment `{{IF_...}}` nào trong file
-- [ ] Slide count đúng với config
+- [ ] Slide count đúng với config (hoặc brief nếu MODE A)
 - [ ] File tự mở được bằng browser (không cần server)
 - [ ] Reveal.js khởi tạo đúng với plugins
+- [ ] Báo cáo đúng content mode (📄 hay 🤖)

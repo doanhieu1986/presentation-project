@@ -16,6 +16,11 @@ Tạo HTML presentations theo yêu cầu. Mỗi presentation là 1 file HTML duy
 Người dùng sẽ cung cấp (tối thiểu): **chủ đề** (topic).  
 Các tham số còn lại lấy default từ `presentation.config.yaml`.
 
+**Bước đầu tiên — kiểm tra content mode:**
+1. Tìm file `content/<topic-slug>.md` hoặc `content/<topic-slug>.txt`
+2. Nếu có → **MODE A**: dùng file làm nguồn nội dung
+3. Nếu không có → **MODE B**: tự generate từ topic + config
+
 Nếu người dùng truyền thêm tham số, override config tương ứng.
 
 **Ví dụ prompt:**
