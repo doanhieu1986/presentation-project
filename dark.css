@@ -1,0 +1,66 @@
+/*
+ * DARK THEME — CSS Variables
+ * Chỉnh màu sắc, font, spacing tại đây.
+ * Không sửa trực tiếp trong file output.
+ *
+ * Khi muốn update: nói "cập nhật theme dark, đổi accent sang #..."
+ * Claude sẽ sửa file này và regenerate nếu cần.
+ */
+
+:root {
+  /* --- Màu nền --- */
+  --color-bg-primary:      #0f1117;   /* Nền slide chính */
+  --color-bg-secondary:    #1a1d27;   /* Nền section / card */
+  --color-bg-accent:       #1e2235;   /* Nền highlight nhẹ */
+
+  /* --- Màu chữ --- */
+  --color-text-primary:    #e8eaf0;   /* Chữ chính */
+  --color-text-secondary:  #9099b0;   /* Chữ phụ / subtitle */
+  --color-text-muted:      #555e78;   /* Chữ mờ / metadata */
+
+  /* --- Màu nhấn (accent) --- */
+  --color-accent-primary:  #5b8dee;   /* Xanh chính — tiêu đề, border */
+  --color-accent-secondary:#3dd68c;   /* Xanh lá — highlight, bullet icon */
+  --color-accent-warning:  #f5a623;   /* Cam — cảnh báo, emphasis */
+  --color-accent-danger:   #e05c5c;   /* Đỏ — negative data */
+
+  /* --- Border --- */
+  --color-border:          #2a2f45;
+  --color-border-accent:   #3a4a7a;
+
+  /* --- Typography --- */
+  --font-heading:   'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-body:      'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-mono:      'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  --font-size-title:    2.4rem;
+  --font-size-h1:       1.9rem;
+  --font-size-h2:       1.4rem;
+  --font-size-body:     1.05rem;
+  --font-size-small:    0.85rem;
+  --font-size-meta:     0.75rem;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold:   700;
+
+  --line-height-body:   1.65;
+  --line-height-tight:  1.25;
+
+  /* --- Spacing --- */
+  --space-xs:   0.25rem;
+  --space-sm:   0.5rem;
+  --space-md:   1rem;
+  --space-lg:   1.75rem;
+  --space-xl:   2.5rem;
+  --space-2xl:  4rem;
+
+  /* --- Radius --- */
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg:  16px;
+
+  /* --- Shadows --- */
+  --shadow-card:  0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-glow:  0 0 20px rgba(91, 141, 238, 0.2);
+}

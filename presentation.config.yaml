@@ -1,0 +1,60 @@
+# ============================================================
+# PRESENTATION CONFIG — Chỉnh tham số tại đây
+# Tất cả giá trị đều có thể override bằng prompt khi tạo mới
+# ============================================================
+
+# -----------------------------------------------------------
+# THÔNG TIN PRESENTATION
+# -----------------------------------------------------------
+presentation:
+  topic: ""                    # [BẮT BUỘC khi tạo] Chủ đề chính
+  subtitle: ""                 # Phụ đề (để trống nếu không có)
+  author: "Hieu Doan"                   # Tên tác giả / đơn vị
+  date: "auto"                 # "auto" = lấy ngày hôm nay, hoặc nhập "DD/MM/YYYY"
+  language: "vi"               # "vi" = Tiếng Việt | "en" = English | "vi-en" = Song ngữ
+
+# -----------------------------------------------------------
+# NỘI DUNG & CẤU TRÚC
+# -----------------------------------------------------------
+content:
+  slide_count: 10              # Số slide mục tiêu (không tính cover & kết)
+  audience: "internal"         # "internal" | "client" | "clevel" | "conference"
+  tone: "professional"         # "professional" | "casual" | "inspirational" | "technical"
+  include_agenda: true         # Có slide Agenda sau Cover không?
+  include_qa: true             # Có slide Q&A / Thank you cuối không?
+  bullet_max: 5                # Số bullet tối đa mỗi slide
+
+# -----------------------------------------------------------
+# FRAMEWORK
+# -----------------------------------------------------------
+framework:
+  name: "revealjs"
+  version: "5.1.0"
+  cdn_base: "https://cdn.jsdelivr.net/npm/reveal.js@5.1.0"
+  plugins:
+    - "highlight"              # Syntax highlighting cho code blocks
+    - "notes"                  # Speaker notes
+    - "zoom"                   # Zoom on click
+
+# -----------------------------------------------------------
+# THEME & VISUAL
+# -----------------------------------------------------------
+theme:
+  base: "dark"                 # "dark" | "light" (hiện tại chỉ có dark)
+  css_file: "themes/dark.css"
+
+# -----------------------------------------------------------
+# TRANSITIONS & ANIMATION
+# -----------------------------------------------------------
+transitions:
+  slide: "slide"               # "none" | "fade" | "slide" | "convex" | "zoom"
+  speed: "default"             # "default" | "fast" | "slow"
+  fragment: "fade-up"          # Animation cho từng bullet xuất hiện
+
+# -----------------------------------------------------------
+# OUTPUT
+# -----------------------------------------------------------
+output:
+  directory: "output/"
+  filename_pattern: "{topic-slug}_{date}.html"
+  self_contained: true         # Inline tất cả CSS, dùng CDN cho JS
