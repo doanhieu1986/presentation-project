@@ -30,13 +30,15 @@
       --radius-lg: 16px;
     }
 
+    html { font-size: 17px; }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background: var(--color-bg-primary);
       color: var(--color-text-primary);
       font-family: var(--font-body);
-      font-size: 15px;
+      font-size: 1rem;
       line-height: 1.65;
       min-height: 100vh;
       display: flex;
@@ -78,9 +80,11 @@
     }
 
     .header-meta {
-      font-size: 0.75rem;
-      color: var(--color-text-muted);
+      font-size: 1rem;
+      color: var(--color-accent-secondary);
       font-family: var(--font-mono);
+      font-weight: 500;
+      letter-spacing: 0.02em;
     }
 
     /* ===== LAYOUT ===== */
@@ -144,8 +148,7 @@
     /* ===== MAIN ===== */
     main {
       flex: 1;
-      padding: 2.5rem 3rem 4rem;
-      max-width: 860px;
+      padding: 2.5rem 2rem 4rem;
       min-width: 0;
     }
 
@@ -153,6 +156,8 @@
     .section { display: none; }
     .section.active {
       display: block;
+      max-width: 860px;
+      margin: 0 auto;
       animation: fadeUp 0.22s ease;
     }
 
