@@ -12,6 +12,7 @@ date: ""               # DD/MM/YYYY — để trống = ngày hôm nay
 audience: ""           # internal | client | clevel | conference
 language: ""           # vi | en — để trống = dùng config default
 slide_count: 0         # 0 = Claude tự quyết dựa theo nội dung bên dưới
+format: ""             # slide | interactive — để trống = dùng config default
 
 # ---------------------------------------------------------------
 # NỘI DUNG

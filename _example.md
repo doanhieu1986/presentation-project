@@ -10,6 +10,7 @@ date: "15/04/2025"
 audience: "clevel"
 language: "vi"
 slide_count: 0         # để Claude tự quyết — có 4 sections nên ~10-12 slides
+format: "slide"        # slide | interactive
 
 # ---------------------------------------------------------------
 # NỘI DUNG

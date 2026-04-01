@@ -19,8 +19,8 @@ content/<topic-slug>.md  hoặc  content/<topic-slug>.txt
 → Ghi chú: `📄 Content source: content/<file>`
 
 ### MODE B — Không có file content (Auto-generate)
-→ Claude tự generate dựa trên `topic`, `audience`, `tone`  
-→ Dùng kiến thức chung, cấu trúc theo best practices  
+→ Claude tự generate dựa trên `topic`, `audience`, `tone`
+→ Dùng kiến thức chung, cấu trúc theo best practices
 → Ghi chú: `🤖 Content: auto-generated`
 
 **Quy tắc ưu tiên:** File content luôn thắng. Nếu có file → luôn dùng MODE A dù prompt không nhắc đến.
@@ -36,11 +36,27 @@ Trích xuất các tham số từ prompt người dùng:
 | `topic` | Từ prompt | Bắt buộc — hỏi lại nếu thiếu |
 | `subtitle` | Từ prompt | `""` |
 | `author` | Từ prompt | `""` |
-| `slide_count` | Từ prompt | `config.content.slide_count` |
+| `slide_count` | Từ prompt hoặc brief | `config.content.slide_count` |
 | `audience` | Từ prompt | `config.content.audience` |
 | `tone` | Từ prompt | `config.content.tone` |
 | `language` | Từ prompt | `config.presentation.language` |
 | `date` | Từ prompt | Ngày hiện tại |
+| `format` | Từ prompt hoặc brief | `config.output.format` |
+
+**Quy tắc `slide_count`:**
+- Có giá trị số (khác 0 / khác `""`) → generate đúng số slide đó
+- Bằng `0`, `""`, hoặc không có → tự quyết dựa theo độ phức tạp và lượng nội dung
+
+---
+
+## BƯỚC 1B — Xác định Format
+
+Sau khi parse tham số, xác định luồng generate:
+
+| `format` | Luồng |
+|---|---|
+| `"slide"` | → Tiếp tục BƯỚC 2 → BƯỚC 5 (Reveal.js) |
+| `"interactive"` | → Bỏ qua BƯỚC 2-4, chuyển sang **BƯỚC 2I** |
 
 ---
 
@@ -171,6 +187,34 @@ Xoá toàn bộ comment `<!-- {{IF_...}} -->` sau khi xử lý điều kiện.
 
 ---
 
+## BƯỚC 2I — Generate Interactive HTML (chỉ khi `format: "interactive"`)
+
+Không dùng Reveal.js. Tạo một file HTML tự chứa với layout tương tác phù hợp nội dung.
+
+**Chọn layout dựa theo nội dung:**
+- Nhiều sections rõ ràng → **Tab navigation** (tabs ngang hoặc sidebar)
+- Nội dung dạng checklist / quy trình → **Accordion / Stepper**
+- So sánh nhiều phương án → **Card grid**
+- Nội dung hỗn hợp → **Single-page scroll** với anchor nav
+
+**Yêu cầu kỹ thuật:**
+- CSS và JS viết inline trong `<style>` và `<script>`
+- Không dùng CDN ngoài (self-contained hoàn toàn)
+- Responsive (mobile-friendly)
+- Dark theme, dùng color palette từ `themes/dark.css` làm tham chiếu (nhưng viết lại inline, không import file)
+- Có smooth transition khi chuyển tab/section
+- Tối ưu cho đọc trên màn hình, không phải trình chiếu
+
+**Báo cáo sau khi generate:**
+```
+✅ Generated: output/ten-file.html
+📄 Format: interactive (tabs / accordion / scroll — tuỳ loại đã chọn)
+📑 Sections: X sections
+🎨 Theme: dark (inline)
+```
+
+---
+
 ## BƯỚC 5 — Output
 
 1. Tạo file tại `output/<topic-slug>_<YYYYMMDD>.html`
@@ -199,10 +243,10 @@ Sau khi sửa template/theme: hỏi người dùng có muốn regenerate file ou
 ## Checklist trước khi output
 
 - [ ] Đã kiểm tra `content/` — xác định MODE A hay MODE B
-- [ ] Tất cả `{{PLACEHOLDER}}` đã được thay thế
-- [ ] CSS từ `themes/dark.css` đã được inline
+- [ ] Đã xác định `format` — slide hay interactive
+- [ ] **Nếu slide:** Tất cả `{{PLACEHOLDER}}` đã được thay thế, CSS inline, Reveal.js khởi tạo đúng
+- [ ] **Nếu interactive:** CSS + JS inline hoàn toàn, không dùng CDN ngoài, responsive
 - [ ] Không còn comment `{{IF_...}}` nào trong file
-- [ ] Slide count đúng với config (hoặc brief nếu MODE A)
+- [ ] `slide_count` đúng — hoặc đã tự quyết nếu config để trống
 - [ ] File tự mở được bằng browser (không cần server)
-- [ ] Reveal.js khởi tạo đúng với plugins
-- [ ] Báo cáo đúng content mode (📄 hay 🤖)
+- [ ] Báo cáo đúng content mode (📄 hay 🤖) và format

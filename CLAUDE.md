@@ -21,6 +21,10 @@ Các tham số còn lại lấy default từ `presentation.config.yaml`.
 2. Nếu có → **MODE A**: dùng file làm nguồn nội dung
 3. Nếu không có → **MODE B**: tự generate từ topic + config
 
+**Quy tắc số slide:**
+- `slide_count` có giá trị số → generate đúng số slide đó
+- `slide_count` để trống (`""`) → tự quyết dựa theo độ phức tạp và lượng nội dung
+
 Nếu người dùng truyền thêm tham số, override config tương ứng.
 
 **Ví dụ prompt:**
@@ -36,8 +40,12 @@ Nếu người dùng truyền thêm tham số, override config tương ứng.
 ## Cấu trúc file output
 
 - Tên file: `output/<topic-slug>_<YYYYMMDD>.html`
-- Self-contained: tất cả CSS inline trong `<style>`, JS dùng CDN
-- Reveal.js version: xem `config/presentation.config.yaml`
+- Self-contained: tất cả CSS inline trong `<style>`, JS dùng CDN hoặc inline
+
+**Hai định dạng output (`output.format`):**
+
+- `"slide"` → Reveal.js slideshow (mặc định). Dùng framework + theme từ config, đọc template `templates/dark-base.html`
+- `"interactive"` → HTML tùy biến, tương tác như website: có thể có tabs, sections, sidebar, accordion, v.v. Không dùng Reveal.js. Tự thiết kế layout phù hợp với nội dung, ưu tiên trải nghiệm đọc/khám phá thay vì trình chiếu. CSS và JS viết inline trong file.
 
 ## Quy tắc nội dung slide
 

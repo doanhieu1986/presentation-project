@@ -17,7 +17,7 @@ presentation:
 # NỘI DUNG & CẤU TRÚC
 # -----------------------------------------------------------
 content:
-  slide_count: 10              # Số slide mục tiêu (không tính cover & kết)
+  slide_count: ""              # Số slide mục tiêu — để trống ("") để tự quyết theo độ phức tạp nội dung
   audience: "internal"         # "internal" | "client" | "clevel" | "conference"
   tone: "professional"         # "professional" | "casual" | "inspirational" | "technical"
   include_agenda: true         # Có slide Agenda sau Cover không?
@@ -58,3 +58,4 @@ output:
   directory: "output/"
   filename_pattern: "{topic-slug}_{date}.html"
   self_contained: true         # Inline tất cả CSS, dùng CDN cho JS
+  format: "interactive"              # "slide" = Reveal.js slideshow | "interactive" = HTML tùy biến (tabs, sections, có thể tương tác như website)
