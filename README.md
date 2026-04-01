@@ -20,7 +20,7 @@ Xem `_example.md` để biết cách viết brief.
 
 ### Chỉnh sửa visual
 ```
-"Đổi màu accent sang #da35ffff"
+"Đổi màu accent sang #a855f7"
 "Đổi font heading sang Poppins"
 "Thêm layout 3 cột vào template"
 "Chỉnh transition sang zoom"

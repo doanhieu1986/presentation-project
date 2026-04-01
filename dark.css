@@ -19,7 +19,7 @@
   --color-text-muted:      #555e78;   /* Chữ mờ / metadata */
 
   /* --- Màu nhấn (accent) --- */
-  --color-accent-primary:  #5b8dee;   /* Xanh chính — tiêu đề, border */
+  --color-accent-primary:  #c084fc;   /* Tím chính — tiêu đề, border */
   --color-accent-secondary:#3dd68c;   /* Xanh lá — highlight, bullet icon */
   --color-accent-warning:  #f5a623;   /* Cam — cảnh báo, emphasis */
   --color-accent-danger:   #e05c5c;   /* Đỏ — negative data */
@@ -62,5 +62,5 @@
 
   /* --- Shadows --- */
   --shadow-card:  0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-glow:  0 0 20px rgba(91, 141, 238, 0.2);
+  --shadow-glow:  0 0 20px rgba(192, 132, 252, 0.2);
 }
