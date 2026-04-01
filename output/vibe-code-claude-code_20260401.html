@@ -483,8 +483,11 @@
     <a data-target="claude-md">
       <span class="nav-icon">📄</span> CLAUDE.md
     </a>
+    <a data-target="project-files">
+      <span class="nav-icon">🗂️</span> Các file &amp; thư mục
+    </a>
     <a data-target="structure">
-      <span class="nav-icon">🗂️</span> Cấu trúc hiệu quả
+      <span class="nav-icon">✏️</span> Viết CLAUDE.md tốt
     </a>
 
     <div class="nav-label">Thực hành</div>
@@ -690,6 +693,152 @@
           <h4>⚠️ Cần maintain</h4>
           <p>CLAUDE.md lỗi thời còn tệ hơn không có. Update ngay khi refactor lớn hoặc thay đổi convention.</p>
         </div>
+      </div>
+    </div>
+
+    <!-- ========== SECTION: PROJECT FILES ========== -->
+    <div class="section" id="project-files">
+      <h2 class="section-title">Các file &amp; thư mục <span>quan trọng</span></h2>
+      <p class="section-desc">Bản đồ đầy đủ của một Claude Code project — mỗi file có vai trò riêng.</p>
+
+      <h3>Sơ đồ cấu trúc</h3>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-label">Project Tree</span>
+        </div>
+        <pre><span class="cv">your-project/</span>
+├── <span class="ch">README.md</span>              <span class="cm">← Cho người đọc (human docs)</span>
+├── <span class="ch">CLAUDE.md</span>              <span class="cm">← Cho Claude (instructions, conventions)</span>
+├── <span class="ch">SKILL.md</span>               <span class="cm">← Domain knowledge tái sử dụng</span>
+│
+├── <span class="ck">.claude/</span>               <span class="cm">← Thư mục cấu hình Claude Code</span>
+│   ├── <span class="cv">settings.json</span>      <span class="cm">← Permissions, model, hooks (commit lên git)</span>
+│   ├── <span class="cv">settings.local.json</span> <span class="cm">← Overrides cá nhân (gitignore)</span>
+│   ├── <span class="cv">.mcp.json</span>          <span class="cm">← MCP server integrations</span>
+│   ├── <span class="ck">rules/</span>             <span class="cm">← Instructions theo chủ đề, load on-demand</span>
+│   ├── <span class="ck">skills/</span>            <span class="cm">← Slash commands &amp; reusable workflows</span>
+│   ├── <span class="ck">agents/</span>            <span class="cm">← Custom AI sub-agents chuyên biệt</span>
+│   └── <span class="ck">hooks/</span>             <span class="cm">← Shell scripts tự động hóa</span>
+│
+├── <span class="ck">templates/</span>             <span class="cm">← Template files (domain-specific)</span>
+└── <span class="ck">output/</span>                <span class="cm">← Files được generate ra</span></pre>
+      </div>
+
+      <h3>README.md vs CLAUDE.md — Khác nhau như thế nào?</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>File</th><th>Đọc bởi</th><th>Nội dung</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>README.md</td>
+            <td>Developer mới, stakeholder</td>
+            <td>Tổng quan project, setup hướng dẫn, link tài liệu</td>
+          </tr>
+          <tr>
+            <td>CLAUDE.md</td>
+            <td>Claude Code (AI)</td>
+            <td>Conventions, commands, patterns, những gì Claude cần biết để code đúng</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>README giải thích <em>"Project này làm gì."</em> &nbsp;CLAUDE.md giải thích <em>"Claude phải làm theo cách nào."</em></p>
+
+      <h3>SKILL.md &amp; <code>.claude/skills/</code> — Workflows tái sử dụng</h3>
+      <div class="highlight-box">
+        <p><strong>Skills</strong> là các file hướng dẫn cho từng task cụ thể, được load <em>on-demand</em> thay vì luôn chiếm token context. Bạn gọi bằng <code>/skill-name</code> hoặc Claude tự nhận biết khi phù hợp.</p>
+      </div>
+      <div class="card-grid">
+        <div class="card card-purple">
+          <div class="card-icon">🔧</div>
+          <h4>SKILL.md ở root</h4>
+          <p>Domain knowledge chung của project — Claude đọc khi làm task liên quan. Ví dụ: quy trình deploy, cách viết migration.</p>
+        </div>
+        <div class="card card-purple">
+          <div class="card-icon">⚡</div>
+          <h4>.claude/skills/</h4>
+          <p>Mỗi skill là một thư mục với <code>SKILL.md</code> riêng. Hỗ trợ frontmatter để config model, tools, permissions cho từng workflow.</p>
+        </div>
+        <div class="card card-green">
+          <div class="card-icon">🔑</div>
+          <h4>Ưu điểm</h4>
+          <p>Tiết kiệm context — chỉ load khi cần. Dễ share trong team qua git. Có thể gán model riêng (haiku cho task đơn giản).</p>
+        </div>
+        <div class="card card-green">
+          <div class="card-icon">📋</div>
+          <h4>Ví dụ dùng</h4>
+          <p><code>/deploy</code>, <code>/review-pr</code>, <code>/commit</code>, <code>/test</code> — mỗi cái là một skill file riêng.</p>
+        </div>
+      </div>
+
+      <h3><code>.claude/settings.json</code> — Trung tâm cấu hình</h3>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-label">.claude/settings.json</span>
+        </div>
+        <pre>{
+  <span class="ck">"model"</span>: <span class="cs">"claude-sonnet-4-6"</span>,
+  <span class="ck">"permissions"</span>: {
+    <span class="ck">"allow"</span>: [<span class="cs">"Bash(npm *)"</span>, <span class="cs">"Bash(git *)"</span>, <span class="cs">"WebFetch"</span>],
+    <span class="ck">"deny"</span>:  [<span class="cs">"Bash(rm -rf *)"</span>, <span class="cs">"Write(.env*)"</span>]
+  },
+  <span class="ck">"hooks"</span>: {
+    <span class="ck">"PostToolUse"</span>: [{
+      <span class="ck">"matcher"</span>: <span class="cs">"Edit|Write"</span>,
+      <span class="ck">"hooks"</span>: [{ <span class="ck">"type"</span>: <span class="cs">"command"</span>, <span class="ck">"command"</span>: <span class="cs">"npx prettier --write"</span> }]
+    }]
+  }
+}</pre>
+      </div>
+
+      <h3><code>.claude/agents/</code> — Sub-agents chuyên biệt</h3>
+      <p>Mỗi agent là một AI riêng với context window, tool access và permissions độc lập. Tạo file <code>.claude/agents/code-reviewer.md</code>:</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-label">.claude/agents/code-reviewer.md</span>
+        </div>
+        <pre><span class="ch">---</span>
+<span class="ck">name</span>: code-reviewer
+<span class="ck">description</span>: <span class="cs">Chuyên review code sau khi có thay đổi</span>
+<span class="ck">tools</span>: Read, Glob, Grep   <span class="cm"># chỉ đọc, không sửa</span>
+<span class="ck">model</span>: sonnet
+<span class="ch">---</span>
+
+Bạn là senior engineer. Review code về:
+- Correctness, edge cases
+- Security vulnerabilities
+- Performance &amp; maintainability</pre>
+      </div>
+
+      <h3><code>.claude/hooks/</code> — Tự động hóa lifecycle</h3>
+      <div class="card-grid card-grid-3">
+        <div class="card card-orange">
+          <div class="card-icon">🔒</div>
+          <h4>PreToolUse</h4>
+          <p>Chặn lệnh nguy hiểm trước khi chạy. Ví dụ: block <code>rm -rf</code> ngoài <code>/tmp</code>.</p>
+        </div>
+        <div class="card card-green">
+          <div class="card-icon">✨</div>
+          <h4>PostToolUse</h4>
+          <p>Chạy sau khi tool xong. Ví dụ: auto-format file vừa edit bằng Prettier.</p>
+        </div>
+        <div class="card card-purple">
+          <div class="card-icon">🔔</div>
+          <h4>Notification</h4>
+          <p>Gửi notification khi Claude cần input. Ví dụ: macOS notification popup.</p>
+        </div>
+      </div>
+
+      <h3>Memory — Học và nhớ theo thời gian</h3>
+      <div class="highlight-box">
+        <p>Claude tự lưu learnings vào <code>~/.claude/projects/&lt;project&gt;/memory/</code> — không nằm trong repo. Gồm: build commands, debugging patterns, preferences của bạn. 200 dòng đầu của <strong>MEMORY.md</strong> được load tự động mỗi session.</p>
+      </div>
+      <div class="tags">
+        <span class="tag">MEMORY.md (index)</span>
+        <span class="tag-green tag">user memories</span>
+        <span class="tag-green tag">feedback memories</span>
+        <span class="tag-green tag">project memories</span>
+        <span class="tag-green tag">reference memories</span>
       </div>
     </div>
 
