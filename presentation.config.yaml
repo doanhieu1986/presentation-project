@@ -9,7 +9,7 @@
 presentation:
   topic: ""                    # [BẮT BUỘC khi tạo] Chủ đề chính
   subtitle: ""                 # Phụ đề (để trống nếu không có)
-  author: "Hieu Doan"                   # Tên tác giả / đơn vị
+  author: "Đoàn Trung Hiếu"    # Tên tác giả / đơn vị
   date: "auto"                 # "auto" = lấy ngày hôm nay, hoặc nhập "DD/MM/YYYY"
   language: "vi"               # "vi" = Tiếng Việt | "en" = English | "vi-en" = Song ngữ
 

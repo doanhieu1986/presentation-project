@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>First Catchup – Analytic Team</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    html { font-size: 17px; }
+
+    :root {
+      --color-bg-primary:     #0f1117;
+      --color-bg-secondary:   #1a1d27;
+      --color-bg-accent:      #1e2235;
+      --color-text-primary:   #e8eaf0;
+      --color-text-secondary: #9099b0;
+      --color-text-muted:     #555e78;
+      --color-accent-primary:   #c084fc;
+      --color-accent-secondary: #3dd68c;
+      --color-accent-warning:   #f5a623;
+      --color-accent-danger:    #e05c5c;
+      --color-border:         #2a2f45;
+      --color-border-accent:  #3a4a7a;
+      --font-heading: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      --font-body:    'Inter', 'Segoe UI', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      --shadow-card:  0 4px 24px rgba(0,0,0,0.4);
+      --shadow-glow:  0 0 20px rgba(192,132,252,0.2);
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.65;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+    }
+
+    .header-left { display: flex; align-items: center; gap: 0.75rem; }
+
+    .header-badge {
+      background: linear-gradient(135deg, var(--color-accent-primary), #9333ea);
+      color: white;
+      padding: 0.2rem 0.7rem;
+      border-radius: 99px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    header h1 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .header-meta {
+      font-size: 1rem;
+      color: var(--color-accent-secondary);
+      font-family: var(--font-mono);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    /* ===== LAYOUT ===== */
+    .app-layout {
+      display: flex;
+      flex: 1;
+    }
+
+    /* ===== SIDEBAR ===== */
+    nav.sidebar {
+      width: 220px;
+      min-width: 220px;
+      background: var(--color-bg-secondary);
+      border-right: 1px solid var(--color-border);
+      padding: 1.5rem 0 2rem;
+      position: sticky;
+      top: 53px;
+      height: calc(100vh - 53px);
+      overflow-y: auto;
+    }
+
+    .nav-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      padding: 0 1.25rem;
+      margin: 1.25rem 0 0.4rem;
+    }
+
+    .nav-label:first-child { margin-top: 0; }
+
+    nav.sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.45rem 1.25rem;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.855rem;
+      border-left: 3px solid transparent;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    nav.sidebar a:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-accent);
+    }
+
+    nav.sidebar a.active {
+      color: var(--color-accent-primary);
+      border-left-color: var(--color-accent-primary);
+      background: rgba(192, 132, 252, 0.08);
+      font-weight: 500;
+    }
+
+    .nav-icon { font-size: 0.85rem; width: 18px; text-align: center; }
+
+    /* ===== MAIN ===== */
+    main {
+      flex: 1;
+      padding: 2.5rem 2rem 4rem;
+      min-width: 0;
+    }
+
+    /* ===== SECTIONS ===== */
+    .section { display: none; }
+    .section.active {
+      display: block;
+      max-width: 860px;
+      margin: 0 auto;
+      animation: fadeUp 0.22s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 0.35rem;
+      line-height: 1.2;
+    }
+
+    .section-title span { color: var(--color-accent-primary); }
+
+    .section-desc {
+      color: var(--color-text-secondary);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin: 2rem 0 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    h3::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    p { color: var(--color-text-secondary); margin-bottom: 1rem; font-size: 0.9rem; }
+
+    /* ===== HIGHLIGHT BOX ===== */
+    .highlight-box {
+      background: rgba(192, 132, 252, 0.07);
+      border: 1px solid var(--color-border-accent);
+      border-left: 4px solid var(--color-accent-primary);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .highlight-box p { margin: 0; font-size: 0.9rem; }
+    .highlight-box strong { color: var(--color-accent-primary); }
+
+    .highlight-box.green {
+      background: rgba(61, 214, 140, 0.06);
+      border-color: rgba(61, 214, 140, 0.25);
+      border-left-color: var(--color-accent-secondary);
+    }
+    .highlight-box.green strong { color: var(--color-accent-secondary); }
+
+    /* ===== CARDS ===== */
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .card-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+    .card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .card-purple { border-top: 3px solid var(--color-accent-primary); }
+    .card-green  { border-top: 3px solid var(--color-accent-secondary); }
+    .card-orange { border-top: 3px solid var(--color-accent-warning); }
+    .card-red    { border-top: 3px solid var(--color-accent-danger); }
+    .card-muted  { border-top: 3px solid var(--color-text-muted); }
+
+    .card-icon { font-size: 1.4rem; margin-bottom: 0.6rem; }
+
+    .card h4 {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 0.35rem;
+    }
+
+    .card p { font-size: 0.82rem; margin: 0; }
+
+    /* ===== PROJECT CARDS ===== */
+    .project-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .project-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.25rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .project-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-card h4 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 0;
+    }
+
+    .project-card h5 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin: 0 0 0.45rem;
+    }
+
+    .project-card p { font-size: 0.82rem; margin: 0; color: var(--color-text-secondary); }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3em;
+      padding: 0.15em 0.65em;
+      border-radius: 99px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-active   { background: rgba(61,214,140,0.12); color: var(--color-accent-secondary); border: 1px solid rgba(61,214,140,0.3); }
+    .status-pause    { background: rgba(224,92,92,0.1);  color: var(--color-accent-danger);    border: 1px solid rgba(224,92,92,0.25); }
+    .status-pending  { background: rgba(245,166,35,0.1); color: var(--color-accent-warning);   border: 1px solid rgba(245,166,35,0.25); }
+    .status-review   { background: rgba(192,132,252,0.1); color: var(--color-accent-primary);  border: 1px solid rgba(192,132,252,0.25); }
+    .status-inactive { background: rgba(85,94,120,0.15); color: var(--color-text-muted);       border: 1px solid var(--color-border); }
+
+    /* ===== MEMBER TABLE ===== */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.75rem;
+      font-size: 0.855rem;
+    }
+
+    .data-table th {
+      background: var(--color-bg-accent);
+      color: var(--color-accent-primary);
+      font-weight: 700;
+      padding: 0.7rem 1rem;
+      text-align: left;
+      border-bottom: 2px solid var(--color-border-accent);
+      font-size: 0.8rem;
+    }
+
+    .data-table td {
+      padding: 0.7rem 1rem;
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: top;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table td:first-child { color: var(--color-text-primary); font-weight: 600; }
+
+    /* ===== STYLED LIST ===== */
+    ul.styled {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1.75rem;
+    }
+
+    ul.styled li {
+      padding: 0.65rem 0 0.65rem 1.5rem;
+      position: relative;
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+      font-size: 0.9rem;
+    }
+
+    ul.styled li:last-child { border-bottom: none; }
+
+    ul.styled li::before {
+      content: '▸';
+      color: var(--color-accent-primary);
+      position: absolute;
+      left: 0;
+      top: 0.65rem;
+    }
+
+    ul.styled li strong { color: var(--color-text-primary); }
+    ul.styled li em { color: var(--color-accent-warning); font-style: normal; font-size: 0.82rem; }
+
+    /* ===== STEP LIST ===== */
+    .step-list {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1.75rem;
+    }
+
+    .step-list li {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 0.6rem;
+      align-items: flex-start;
+    }
+
+    .step-arrow {
+      color: var(--color-text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.1rem;
+      padding-left: 1rem;
+    }
+
+    /* ===== FLOW DIAGRAM ===== */
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-bottom: 1.75rem;
+    }
+
+    .flow-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+    }
+
+    .flow-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 32px;
+      min-width: 32px;
+    }
+
+    .flow-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--color-accent-primary);
+      margin-top: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .flow-line {
+      width: 2px;
+      flex: 1;
+      background: var(--color-border-accent);
+      min-height: 24px;
+      margin-top: 2px;
+    }
+
+    .flow-item:last-child .flow-line { display: none; }
+
+    .flow-body {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 0.7rem 1rem;
+      margin-bottom: 4px;
+      flex: 1;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+
+    .flow-body strong { color: var(--color-text-primary); }
+    .flow-body .note { font-size: 0.78rem; color: var(--color-text-muted); margin-top: 0.2rem; }
+
+    /* ===== CODE BLOCK ===== */
+    .code-block {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .code-block-header {
+      background: var(--color-bg-accent);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0.5rem 1rem;
+    }
+
+    .code-block-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--color-accent-primary);
+      font-family: var(--font-mono);
+    }
+
+    .code-block pre {
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.9;
+      color: var(--color-text-primary);
+      margin: 0;
+      white-space: pre;
+    }
+
+    /* ===== TAGS ===== */
+    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.75rem; }
+
+    .tag {
+      display: inline-block;
+      background: var(--color-bg-accent);
+      border: 1px solid var(--color-border-accent);
+      color: var(--color-accent-primary);
+      border-radius: 99px;
+      padding: 0.2em 0.8em;
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    .tag-green {
+      color: var(--color-accent-secondary);
+      border-color: rgba(61, 214, 140, 0.25);
+      background: rgba(61, 214, 140, 0.06);
+    }
+
+    /* ===== DIVIDER ===== */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--color-border);
+      margin: 2rem 0;
+    }
+
+    /* ===== IDEA CARD ===== */
+    .idea-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .idea-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .idea-icon {
+      font-size: 1.5rem;
+    }
+
+    .idea-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin: 0;
+    }
+
+    .idea-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .idea-card ul li {
+      padding: 0.3rem 0 0.3rem 1.1rem;
+      position: relative;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+
+    .idea-card ul li::before {
+      content: '–';
+      color: var(--color-accent-secondary);
+      position: absolute;
+      left: 0;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      nav.sidebar { display: none; }
+      main { padding: 1.5rem 1.25rem 3rem; }
+      .card-grid, .card-grid-3, .project-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <span class="header-badge">Analytic Team</span>
+    <h1>First Catchup Meeting</h1>
+  </div>
+  <div class="header-meta">Đoàn Trung Hiếu · 06/04/2026</div>
+</header>
+
+<div class="app-layout">
+
+  <nav class="sidebar">
+    <div class="nav-label">Overview</div>
+    <a class="active" data-target="team">
+      <span class="nav-icon">👥</span> Team & Con người
+    </a>
+
+    <div class="nav-label">Công việc</div>
+    <a data-target="projects">
+      <span class="nav-icon">📂</span> Dự án hiện tại
+    </a>
+    <a data-target="process">
+      <span class="nav-icon">🔄</span> Quy trình làm việc
+    </a>
+
+    <div class="nav-label">Vấn đề & Hướng đi</div>
+    <a data-target="challenges">
+      <span class="nav-icon">⚠️</span> Thách thức
+    </a>
+    <a data-target="ideas">
+      <span class="nav-icon">💡</span> Ideas & Định hướng
+    </a>
+  </nav>
+
+  <main>
+
+    <!-- ========== SECTION: TEAM ========== -->
+    <div class="section active" id="team">
+      <h2 class="section-title">Team <span>&amp; Con người</span></h2>
+      <p class="section-desc">Buổi catchup đầu tiên — làm quen và căn chỉnh kỳ vọng.</p>
+
+      <div class="highlight-box">
+        <p><strong>4 thành viên</strong> — văn hóa autonomy cao, thích experimentation, giao tiếp thẳng thắn. Đây là buổi đầu tiên team gặp nhau trong cơ cấu mới.</p>
+      </div>
+
+      <h3>Thành viên</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Thành viên</th>
+            <th>Vai trò</th>
+            <th>Thời gian</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Đoàn Trung Hiếu</td>
+            <td>Team Lead</td>
+            <td>1.5 năm</td>
+          </tr>
+          <tr>
+            <td>Nguyễn Thu An</td>
+            <td>Data Analyst</td>
+            <td>9 tháng</td>
+          </tr>
+          <tr>
+            <td>Nguyễn Nhật Tường</td>
+            <td>Data Scientist</td>
+            <td>7 tháng</td>
+          </tr>
+          <tr>
+            <td>Phạm Thị Nhung</td>
+            <td>Thực tập sinh</td>
+            <td>5 tháng</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Kỳ vọng với cơ cấu team mới</h3>
+      <div class="card-grid">
+        <div class="card card-purple">
+          <div class="card-icon">🎯</div>
+          <h4>Định hướng rõ ràng</h4>
+          <p>Team cần có roadmap và ưu tiên rõ ràng để tập trung đúng chỗ tạo ra value lớn nhất.</p>
+        </div>
+        <div class="card card-green">
+          <div class="card-icon">🔓</div>
+          <h4>Truy cập dữ liệu rộng hơn</h4>
+          <p>Có cơ chế truy cập đầy đủ hơn để thỏa sức phân tích và ứng dụng công nghệ mới.</p>
+        </div>
+      </div>
+
+      <h3>Văn hóa team</h3>
+      <div class="tags">
+        <span class="tag">Autonomy cao</span>
+        <span class="tag">Experimentation</span>
+        <span class="tag-green tag">Giao tiếp thẳng thắn</span>
+        <span class="tag-green tag">Self-driven</span>
+      </div>
+    </div>
+
+    <!-- ========== SECTION: PROJECTS ========== -->
+    <div class="section" id="projects">
+      <h2 class="section-title">Dự án <span>hiện tại</span></h2>
+      <p class="section-desc">6 mảng công việc đang và đã thực hiện — đa dạng từ data platform đến AI.</p>
+
+      <div class="project-grid">
+
+        <div class="project-card">
+          <div class="project-card-header">
+            <h4>CPM</h4>
+            <span class="status-badge status-active">● Active</span>
+          </div>
+          <h5>Customer Profiling</h5>
+          <p>Xây dựng dữ liệu nền tảng khách hàng. Phân tích insight, xây dựng báo cáo & dashboard. Quản lý event tracking trên web, app qua <strong>Countly</strong>.</p>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-header">
+            <h4>CMS</h4>
+            <span class="status-badge status-review">● Cần xem xét</span>
+          </div>
+          <h5>Campaign Management System</h5>
+          <p>Hệ thống phân phối thông báo (notification, toast, popup) theo danh sách KH, lịch & kịch bản tùy biến trên SmartOne App. Đã golive nhưng chưa có case thực tế. Đề xuất bàn giao về TTTK sản phẩm.</p>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-header">
+            <h4>CRM</h4>
+            <span class="status-badge status-pause">● Tạm dừng</span>
+          </div>
+          <h5>Salesforce CRM</h5>
+          <p>Đã qua Discovery, POC, pass vòng đánh giá (chức năng, kỹ thuật, bảo mật). Hiện tạm dừng do định hướng tự build giải pháp CRM nội bộ.</p>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-header">
+            <h4>AI Automation</h4>
+            <span class="status-badge status-inactive">● Không critical</span>
+          </div>
+          <h5>Vibe Code & n8n</h5>
+          <p>Tự động hóa task thủ công cho team Design & Research. Đã trình bày workshop cho các team. Hiện không còn critical sau khi restructure team.</p>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-header">
+            <h4>AI cho DA/DS</h4>
+            <span class="status-badge status-pending">● Pending</span>
+          </div>
+          <h5>Claude Code / Vibe Code</h5>
+          <p>Nghiên cứu ứng dụng AI vào: EDA dữ liệu, báo cáo data quality, xử lý data quality cơ bản, generate code bằng NLQ. Phát sinh trong restructure, đang bị pending.</p>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-header">
+            <h4>Adhoc</h4>
+            <span class="status-badge status-active">● Active</span>
+          </div>
+          <h5>Báo cáo luồng nạp tiền (Deeplink)</h5>
+          <p>Thống kê & báo cáo luồng nạp tiền qua Deeplink dựa trên dữ liệu hành vi KH trên App. Liên quan đến dự án cải tiến luồng nạp tiền SmartOne App.</p>
+        </div>
+
+      </div>
+
+      <div class="highlight-box">
+        <p><strong>Nhận xét:</strong> Portfolio khá đa dạng — từ data platform (CPM), martech (CMS), sales tool (CRM) đến AI tooling. Cần ưu tiên lại để tập trung nguồn lực vào những mảng tạo value rõ nhất.</p>
+      </div>
+    </div>
+
+    <!-- ========== SECTION: PROCESS ========== -->
+    <div class="section" id="process">
+      <h2 class="section-title">Quy trình <span>làm việc cũ</span></h2>
+      <p class="section-desc">Luồng xử lý yêu cầu data hiện tại — nhiều handoff, phụ thuộc nhiều bên.</p>
+
+      <div class="flow">
+        <div class="flow-item">
+          <div class="flow-connector"><div class="flow-dot"></div><div class="flow-line"></div></div>
+          <div class="flow-body">
+            <strong>Yêu cầu từ Head of CX</strong> (hoặc từ bên khác thông qua Head of CX)
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-connector"><div class="flow-dot"></div><div class="flow-line"></div></div>
+          <div class="flow-body">
+            <strong>Team DA/DS</strong> phân tích yêu cầu → lên spec dữ liệu cần thiết
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-connector"><div class="flow-dot"></div><div class="flow-line"></div></div>
+          <div class="flow-body">
+            <strong>Gửi HAV develop</strong> — cung cấp dữ liệu theo yêu cầu
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-connector"><div class="flow-dot" style="background:var(--color-border-accent)"></div><div class="flow-line"></div></div>
+          <div class="flow-body" style="border-left: 3px solid var(--color-border-accent);">
+            <strong>Rẽ nhánh theo loại dữ liệu:</strong>
+            <div class="note">→ Event data: Team Analytic tự phân tích, tạo báo cáo / dashboard</div>
+            <div class="note">→ Non-event data: Team HAV develop báo cáo, Analytic test</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-connector"><div class="flow-dot"></div><div class="flow-line"></div></div>
+          <div class="flow-body">
+            <strong>Team Analytic test & nghiệm thu</strong>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-connector"><div class="flow-dot" style="background:var(--color-accent-secondary)"></div><div class="flow-line"></div></div>
+          <div class="flow-body" style="border-left: 3px solid var(--color-accent-secondary);">
+            <strong>Golive production</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <p><strong>Vấn đề:</strong> Quy trình dài, nhiều handoff, phụ thuộc HAV cho hầu hết dữ liệu production. Team Analytic bị block ngay từ bước truy cập dữ liệu — chưa thể chủ động khai phá insight.</p>
+      </div>
+    </div>
+
+    <!-- ========== SECTION: CHALLENGES ========== -->
+    <div class="section" id="challenges">
+      <h2 class="section-title">Thách thức <span>&amp; Pain Points</span></h2>
+      <p class="section-desc">Những rào cản cốt lõi đang kìm hãm năng suất và impact của team.</p>
+
+      <ul class="styled">
+        <li>
+          <strong>Thiếu Analytic Platform chuẩn</strong><br>
+          Chưa có môi trường đầy đủ để làm việc: PySpark, dbt, Python/Notebook, data warehouse... Team đang work với toolset chắp vá, thiếu consistency.
+        </li>
+        <li>
+          <strong>Hạn chế truy cập dữ liệu thật</strong><br>
+          Gần như toàn bộ dữ liệu production liên quan đến KH chưa được truy cập — ngoại trừ dữ liệu hành vi qua event tracking (Countly). Đây là bottleneck lớn nhất.
+        </li>
+        <li>
+          <strong>Thiếu Knowledge Sharing</strong><br>
+          Không có Business Glossary hay Data Dictionary. Mỗi lần cần tìm hiểu dữ liệu phải làm việc trực tiếp với business và IT → tốn rất nhiều effort và dễ inconsistent.
+        </li>
+        <li>
+          <strong>Tư duy "quá cầu toàn"</strong> <em>(Nhận xét cá nhân)</em><br>
+          Các task dữ liệu thường bị kéo dài do kỳ vọng hoàn hảo ngay từ đầu. Cần adopt mentality "done is better than perfect" và iterate nhanh hơn.
+        </li>
+      </ul>
+
+      <h3>Mức độ ảnh hưởng</h3>
+      <div class="card-grid">
+        <div class="card card-red">
+          <div class="card-icon">🚫</div>
+          <h4>Chặn hoàn toàn</h4>
+          <p>Không truy cập được dữ liệu giao dịch → không thể làm customer analytics, segmentation, hay forecasting.</p>
+        </div>
+        <div class="card card-orange">
+          <div class="card-icon">⏳</div>
+          <h4>Làm chậm đáng kể</h4>
+          <p>Thiếu platform chuẩn + không có data dictionary → mỗi task mất 2-3x thời gian so với benchmark.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SECTION: IDEAS ========== -->
+    <div class="section" id="ideas">
+      <h2 class="section-title">Ideas <span>&amp; Định hướng</span></h2>
+      <p class="section-desc">Các hướng tạo value rõ ràng khi có điều kiện về data & platform.</p>
+
+      <div class="idea-card" style="border-top: 3px solid var(--color-accent-secondary);">
+        <div class="idea-card-header">
+          <span class="idea-icon">🔍</span>
+          <h4>Truy cập dữ liệu giao dịch (Production)</h4>
+        </div>
+        <ul>
+          <li>Khai phá toàn bộ dữ liệu KH — từ hành vi đến giao dịch tài chính</li>
+          <li>Đưa ra insight actionable để cải thiện sản phẩm và trải nghiệm KH</li>
+          <li>Xây dựng nền tảng cho các mô hình ML/AI downstream</li>
+        </ul>
+      </div>
+
+      <div class="idea-card" style="border-top: 3px solid var(--color-accent-primary);">
+        <div class="idea-card-header">
+          <span class="idea-icon">🤖</span>
+          <h4>Automation cho Broker</h4>
+        </div>
+        <ul>
+          <li>Tự động thu thập thông tin thị trường trong nước &amp; quốc tế</li>
+          <li>Phân tích cơ bản &amp; kỹ thuật: thị trường, ngành, mã cổ phiếu</li>
+          <li>Tự động gửi báo cáo định kỳ cho broker / KH</li>
+          <li>Giao tiếp với broker qua Telegram / WhatsApp</li>
+        </ul>
+      </div>
+
+      <div class="idea-card" style="border-top: 3px solid var(--color-accent-warning);">
+        <div class="idea-card-header">
+          <span class="idea-icon">💬</span>
+          <h4>NLQ – Natural Language Query</h4>
+        </div>
+        <ul>
+          <li>Build luồng tự động xử lý data cơ bản không cần code</li>
+          <li>Trả lời câu hỏi nghiệp vụ bằng ngôn ngữ tự nhiên</li>
+          <li>Giảm dependency vào DA/DS cho các query đơn giản, lặp lại</li>
+        </ul>
+      </div>
+
+      <div class="highlight-box green">
+        <p><strong>Next step gợi ý:</strong> Ưu tiên unlock truy cập dữ liệu production trước — đây là prerequisite cho gần như mọi initiative khác. Song song, bắt đầu xây data dictionary từ domain quan trọng nhất (giao dịch, KH).</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const links = document.querySelectorAll('nav.sidebar a');
+  const sections = document.querySelectorAll('.section');
+
+  function navigate(target) {
+    links.forEach(l => l.classList.remove('active'));
+    sections.forEach(s => s.classList.remove('active'));
+    const link = document.querySelector(`nav.sidebar a[data-target="${target}"]`);
+    const section = document.getElementById(target);
+    if (link) link.classList.add('active');
+    if (section) section.classList.add('active');
+  }
+
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      navigate(link.dataset.target);
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    const active = document.querySelector('nav.sidebar a.active');
+    const all = [...links];
+    const idx = all.indexOf(active);
+    if (e.key === 'ArrowDown' && idx < all.length - 1) navigate(all[idx + 1].dataset.target);
+    if (e.key === 'ArrowUp' && idx > 0) navigate(all[idx - 1].dataset.target);
+  });
+</script>
+
+</body>
+</html>

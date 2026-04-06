@@ -7,15 +7,21 @@ Khi người dùng yêu cầu tạo, chỉnh sửa, hoặc cập nhật một HT
 
 ## BƯỚC 0 — Xác định Content Mode
 
-**Trước khi làm gì, kiểm tra xem có file content không:**
+**Trước khi làm gì, kiểm tra xem có file content không.**
 
+**⚠️ Cách kiểm tra bắt buộc — dùng `Bash ls` với đường dẫn tương đối:**
+
+```bash
+ls content/
 ```
-content/<topic-slug>.md  hoặc  content/<topic-slug>.txt
-```
+
+> Lý do: `Glob` có thể bỏ sót file nếu working directory không đúng. `ls content/` luôn chạy đúng từ root project trên mọi máy.
+
+Sau khi có danh sách, tìm file khớp với `<topic-slug>.md` hoặc `<topic-slug>.txt`.
 
 ### MODE A — Có file content (Brief-driven)
-→ Đọc file, dùng làm nguồn sự thật cho nội dung  
-→ Không tự thêm ý ngoài file trừ khi cần expand bullet  
+→ Đọc file bằng `Read` với đường dẫn tuyệt đối  
+→ Dùng làm nguồn sự thật cho nội dung, không tự thêm ý ngoài file  
 → Ghi chú: `📄 Content source: content/<file>`
 
 ### MODE B — Không có file content (Auto-generate)
