@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytic Team — First Catchup</title>
+
+  <!-- Reveal.js CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-bg-primary:      #0f1117;
+      --color-bg-secondary:    #1a1d27;
+      --color-bg-accent:       #1e2235;
+      --color-text-primary:    #e8eaf0;
+      --color-text-secondary:  #9099b0;
+      --color-text-muted:      #555e78;
+      --color-accent-primary:  #c084fc;
+      --color-accent-secondary:#3dd68c;
+      --color-accent-warning:  #f5a623;
+      --color-accent-danger:   #e05c5c;
+      --color-border:          #2a2f45;
+      --color-border-accent:   #3a4a7a;
+      --font-heading:   'Inter', 'Segoe UI', system-ui, sans-serif;
+      --font-body:      'Inter', 'Segoe UI', system-ui, sans-serif;
+      --font-mono:      'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      --font-size-title:    2.4rem;
+      --font-size-h1:       1.9rem;
+      --font-size-h2:       1.4rem;
+      --font-size-body:     1.1rem;
+      --font-size-small:    0.9rem;
+      --font-size-meta:     0.95rem;
+      --font-weight-normal: 400;
+      --font-weight-medium: 500;
+      --font-weight-bold:   700;
+      --line-height-body:   1.65;
+      --line-height-tight:  1.25;
+      --space-xs:   0.25rem;
+      --space-sm:   0.5rem;
+      --space-md:   1rem;
+      --space-lg:   1.75rem;
+      --space-xl:   2.5rem;
+      --space-2xl:  4rem;
+      --radius-sm:  4px;
+      --radius-md:  8px;
+      --radius-lg:  16px;
+      --shadow-card:  0 4px 24px rgba(0,0,0,0.4);
+      --shadow-glow:  0 0 20px rgba(192,132,252,0.2);
+    }
+
+    .reveal-viewport { background: var(--color-bg-primary); }
+    .reveal {
+      font-family: var(--font-body);
+      font-size: var(--font-size-body);
+      color: var(--color-text-primary);
+    }
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: var(--font-heading);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
+      color: var(--color-text-primary);
+      text-transform: none;
+      letter-spacing: -0.02em;
+    }
+    .reveal h1 { font-size: var(--font-size-title); }
+    .reveal h2 { font-size: var(--font-size-h1); }
+    .reveal h3 { font-size: var(--font-size-h2); color: var(--color-accent-primary); margin-bottom: var(--space-lg); }
+    .reveal h2::after {
+      content: ''; display: block; width: 48px; height: 3px;
+      background: var(--color-accent-primary); border-radius: 2px;
+      margin: var(--space-sm) auto 0;
+    }
+    .reveal p { line-height: var(--line-height-body); color: var(--color-text-secondary); }
+    .reveal ul, .reveal ol { text-align: left; line-height: var(--line-height-body); }
+    .reveal ul li {
+      list-style: none; padding-left: var(--space-lg); position: relative;
+      margin-bottom: var(--space-sm); color: var(--color-text-secondary);
+    }
+    .reveal ul li::before { content: '▸'; color: var(--color-accent-secondary); position: absolute; left: 0; font-size: 0.9em; }
+    .reveal a { color: var(--color-accent-primary); }
+
+    .slide-cover {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; height: 100%; text-align: center;
+    }
+    .slide-cover .eyebrow {
+      font-size: var(--font-size-small); font-weight: var(--font-weight-medium);
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--color-accent-primary); margin-bottom: var(--space-md);
+    }
+    .slide-cover h1 {
+      font-size: 2.8rem;
+      background: linear-gradient(135deg, #e8eaf0 0%, var(--color-accent-primary) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: var(--space-md);
+    }
+    .slide-cover .subtitle { font-size: var(--font-size-h2); color: var(--color-text-secondary); margin-bottom: var(--space-xl); }
+    .slide-cover .meta { font-size: var(--font-size-meta); color: var(--color-text-muted); letter-spacing: 0.05em; }
+
+    .slide-section {
+      background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-accent) 100%);
+      border-left: 4px solid var(--color-accent-primary);
+    }
+    .slide-section h2::after { display: none; }
+    .slide-section h2 { font-size: 2.2rem; color: var(--color-accent-primary); }
+
+    .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); text-align: left; }
+    .cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-lg); text-align: left; }
+
+    .card {
+      background: var(--color-bg-secondary); border: 1px solid var(--color-border);
+      border-radius: var(--radius-md); padding: var(--space-lg); box-shadow: var(--shadow-card);
+    }
+    .card-accent  { border-top: 3px solid var(--color-accent-primary); }
+    .card-green   { border-top: 3px solid var(--color-accent-secondary); }
+    .card-warning { border-top: 3px solid var(--color-accent-warning); }
+    .card-danger  { border-top: 3px solid var(--color-accent-danger); }
+
+    .highlight-box {
+      background: rgba(91,141,238,0.08); border: 1px solid var(--color-border-accent);
+      border-left: 4px solid var(--color-accent-primary);
+      border-radius: var(--radius-md); padding: var(--space-md) var(--space-lg); margin: var(--space-md) 0;
+    }
+
+    .stat-number { font-size: 3.5rem; font-weight: var(--font-weight-bold); color: var(--color-accent-primary); line-height: 1; }
+    .stat-label  { font-size: var(--font-size-small); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.4rem; }
+    .stat-sub    { font-size: var(--font-size-small); color: var(--color-text-secondary); margin-top: 0.25rem; }
+
+    .tag { display: inline-block; background: var(--color-bg-accent); border: 1px solid var(--color-border-accent); color: var(--color-accent-primary); border-radius: 99px; padding: 0.15em 0.75em; font-size: 0.82em; font-weight: var(--font-weight-medium); }
+    .tag-green   { color: var(--color-accent-secondary); border-color: rgba(61,214,140,0.3); background: rgba(61,214,140,0.08); }
+    .tag-warning { color: var(--color-accent-warning); border-color: rgba(245,166,35,0.3); background: rgba(245,166,35,0.08); }
+    .tag-muted   { color: var(--color-text-muted); border-color: var(--color-border); background: transparent; }
+
+    .member-row { display: flex; align-items: center; gap: var(--space-md); padding: var(--space-sm) 0; border-bottom: 1px solid var(--color-border); }
+    .member-row:last-child { border-bottom: none; }
+    .member-name   { font-weight: var(--font-weight-bold); color: var(--color-text-primary); flex: 1; }
+    .member-role   { color: var(--color-accent-primary); font-size: var(--font-size-small); min-width: 130px; }
+    .member-tenure { color: var(--color-text-muted); font-size: var(--font-size-small); font-family: var(--font-mono); min-width: 80px; text-align: right; }
+
+    .decision-badge {
+      display: inline-flex; align-items: center; gap: 0.4em;
+      background: rgba(245,166,35,0.12); border: 1px solid rgba(245,166,35,0.4);
+      color: var(--color-accent-warning); border-radius: var(--radius-sm);
+      padding: 0.2em 0.6em; font-size: 0.8em; font-weight: var(--font-weight-medium);
+    }
+
+    .reveal .progress { color: var(--color-accent-primary); height: 3px; }
+    .reveal .slide-number { background: transparent; color: var(--color-text-muted); font-family: var(--font-mono); font-size: var(--font-size-meta); }
+  </style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- COVER -->
+    <section>
+      <div class="slide-cover">
+        <div class="eyebrow">Báo cáo nội bộ · Tháng 4 / 2026</div>
+        <h1>Analytic Team</h1>
+        <div class="subtitle">First Catchup — Tổng quan team & hoạt động</div>
+        <div class="meta">Đoàn Trung Hiếu &nbsp;·&nbsp; 06/04/2026</div>
+      </div>
+    </section>
+
+    <!-- AGENDA -->
+    <section>
+      <h2>Nội dung</h2>
+      <ul>
+        <li class="fragment">Thành viên & Văn hóa team</li>
+        <li class="fragment">Danh mục dự án đang triển khai</li>
+        <li class="fragment">Thách thức & Pain Points</li>
+        <li class="fragment">Ideas — Hướng tạo giá trị cho business</li>
+        <li class="fragment">Đề xuất bước tiếp theo</li>
+      </ul>
+    </section>
+
+    <!-- SECTION 1 -->
+    <section class="slide-section">
+      <h2>Team Overview</h2>
+      <p>Thành viên, vai trò & văn hóa làm việc</p>
+    </section>
+
+    <!-- Team Snapshot -->
+    <section>
+      <h2>Team Snapshot</h2>
+      <div class="cols-3" style="margin-bottom:var(--space-lg)">
+        <div class="card" style="text-align:center">
+          <div class="stat-number">04</div>
+          <div class="stat-label">Thành viên</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Vai trò</div>
+          <div class="stat-sub">Lead · Analyst · Scientist</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div class="stat-number">6</div>
+          <div class="stat-label">Dự án / Initiatives</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="member-row">
+          <span class="member-name">Đoàn Trung Hiếu</span>
+          <span class="member-role">Team Lead</span>
+          <span class="member-tenure">18 tháng</span>
+        </div>
+        <div class="member-row">
+          <span class="member-name">Nguyễn Thu An</span>
+          <span class="member-role">Data Analyst</span>
+          <span class="member-tenure">9 tháng</span>
+        </div>
+        <div class="member-row">
+          <span class="member-name">Nguyễn Nhật Tường</span>
+          <span class="member-role">Data Scientist</span>
+          <span class="member-tenure">7 tháng</span>
+        </div>
+        <div class="member-row">
+          <span class="member-name">Phạm Thị Nhung</span>
+          <span class="member-role">Thực tập sinh</span>
+          <span class="member-tenure">5 tháng</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Culture -->
+    <section>
+      <h2>Văn hóa & Kỳ vọng</h2>
+      <div class="cols-2">
+        <div class="card card-accent">
+          <h3>Văn hóa team</h3>
+          <ul>
+            <li>Rất autonomy — tự chủ trong công việc</li>
+            <li>Thích experimentation</li>
+            <li>Giao tiếp thẳng thắn, trực tiếp</li>
+          </ul>
+        </div>
+        <div class="card card-green">
+          <h3>Kỳ vọng với cơ cấu mới</h3>
+          <ul>
+            <li>Có định hướng rõ ràng từ leadership</li>
+            <li>Mở rộng khả năng truy cập dữ liệu</li>
+            <li>Không gian thử nghiệm công nghệ mới</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section class="slide-section">
+      <h2>Danh mục Dự án</h2>
+      <p>6 projects / initiatives đang theo dõi</p>
+    </section>
+
+    <!-- Project Portfolio -->
+    <section>
+      <h2>Portfolio Dự án</h2>
+      <div class="cols-2">
+        <div>
+          <div class="card" style="margin-bottom:var(--space-md)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+              <strong style="color:var(--color-text-primary)">CPM — Customer Profiling</strong>
+              <span class="tag tag-green">Active</span>
+            </div>
+            <p style="margin:0;font-size:0.9em">Dữ liệu nền tảng khách hàng, insight & dashboard, event tracking</p>
+          </div>
+          <div class="card" style="margin-bottom:var(--space-md)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+              <strong style="color:var(--color-text-primary)">Adhoc — Deeplink Report</strong>
+              <span class="tag tag-green">Active</span>
+            </div>
+            <p style="margin:0;font-size:0.9em">Báo cáo luồng nạp tiền qua Deeplink trên SmartOne App</p>
+          </div>
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+              <strong style="color:var(--color-text-primary)">AI cho DA/DS</strong>
+              <span class="tag tag-warning">Pending</span>
+            </div>
+            <p style="margin:0;font-size:0.9em">EDA, data quality, NLQ — tạm dừng trong giai đoạn restructure</p>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:var(--space-md)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+              <strong style="color:var(--color-text-primary)">CMS — Notification System</strong>
+              <span class="tag tag-warning">Xem xét bàn giao</span>
+            </div>
+            <p style="margin:0;font-size:0.9em">Đã golive, chưa có case thực tế → đề xuất chuyển về TTTK sản phẩm</p>
+          </div>
+          <div class="card" style="margin-bottom:var(--space-md)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+              <strong style="color:var(--color-text-primary)">CRM — Salesforce</strong>
+              <span class="tag tag-muted">Tạm dừng</span>
+            </div>
+            <p style="margin:0;font-size:0.9em">Đã pass evaluation; dừng do định hướng tự build CRM nội bộ</p>
+          </div>
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+              <strong style="color:var(--color-text-primary)">AI & Automation (n8n)</strong>
+              <span class="tag tag-muted">Completed</span>
+            </div>
+            <p style="margin:0;font-size:0.9em">Workshop cho Design & Research; không còn critical sau restructure</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CPM Deep Dive -->
+    <section>
+      <h2>CPM — Nền tảng Dữ liệu Khách hàng</h2>
+      <div class="highlight-box" style="margin-bottom:var(--space-lg)">
+        <p style="margin:0"><strong>Dự án chiến lược cốt lõi</strong> — cung cấp dữ liệu nền cho toàn bộ hoạt động phân tích & ra quyết định của business.</p>
+      </div>
+      <ul>
+        <li class="fragment">Xây dựng customer data foundation từ nhiều nguồn</li>
+        <li class="fragment">Phân tích insight, xây dựng báo cáo & dashboard định kỳ</li>
+        <li class="fragment">Quản lý event tracking trên Web & App (Countly)</li>
+        <li class="fragment"><strong style="color:var(--color-accent-warning)">Nút thắt:</strong> hạn chế truy cập dữ liệu production → giảm chiều sâu phân tích</li>
+      </ul>
+    </section>
+
+    <!-- Decision Points -->
+    <section>
+      <h2>Quyết định Cần Xem Xét</h2>
+      <div class="cols-2">
+        <div class="card card-warning">
+          <h3>CMS — Bàn giao</h3>
+          <p>Hệ thống thông báo đã golive nhưng không phù hợp chức năng Data team.</p>
+          <ul>
+            <li>Đề xuất: chuyển về TTTK sản phẩm</li>
+            <li>Giải phóng bandwidth team Analytic</li>
+          </ul>
+          <br>
+          <span class="decision-badge">⚡ Cần quyết định</span>
+        </div>
+        <div class="card card-warning">
+          <h3>CRM — Hướng đi</h3>
+          <p>Salesforce đã pass evaluation đầy đủ (nghiệp vụ, kỹ thuật, bảo mật).</p>
+          <ul>
+            <li>Hiện tạm dừng: định hướng tự build</li>
+            <li>Cần xác nhận roadmap CRM nội bộ</li>
+          </ul>
+          <br>
+          <span class="decision-badge">⚡ Cần quyết định</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section class="slide-section">
+      <h2>Thách thức & Pain Points</h2>
+      <p>Các rào cản ảnh hưởng hiệu quả hoạt động</p>
+    </section>
+
+    <!-- Pain Points -->
+    <section>
+      <h2>4 Pain Points Chính</h2>
+      <div class="cols-2">
+        <div class="card card-danger">
+          <h3>Thiếu Analytic Platform</h3>
+          <p>Chưa có môi trường chuẩn (PySpark, dbt, Notebook) — giới hạn khả năng xử lý dữ liệu lớn.</p>
+        </div>
+        <div class="card card-danger">
+          <h3>Hạn chế Truy cập Dữ liệu</h3>
+          <p>Gần như toàn bộ dữ liệu production chưa được truy cập (ngoại trừ event tracking).</p>
+        </div>
+        <div class="card card-warning" style="margin-top:var(--space-md)">
+          <h3>Thiếu Knowledge Sharing</h3>
+          <p>Không có business glossary / data dictionary → phải coordinate với IT & business cho từng yêu cầu.</p>
+        </div>
+        <div class="card card-warning" style="margin-top:var(--space-md)">
+          <h3>Perfectionism Overhead</h3>
+          <p>Task dữ liệu bị kéo dài do kỳ vọng hoàn hảo ngay từ đầu → chậm deliver value.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section class="slide-section">
+      <h2>Ideas — Tạo giá trị Business</h2>
+      <p>Các hướng mở rộng tác động của Analytic Team</p>
+    </section>
+
+    <!-- Business Ideas -->
+    <section>
+      <h2>3 Hướng Tạo Giá trị</h2>
+      <div class="cols-3">
+        <div class="card card-accent">
+          <h3>Data Access</h3>
+          <p>Truy cập dữ liệu giao dịch production để khai phá insight chiều sâu về khách hàng & hành vi.</p>
+          <p style="font-size:0.82em;color:var(--color-text-muted);margin-top:var(--space-sm)">Điều kiện tiên quyết cho mọi initiative phân tích nâng cao.</p>
+        </div>
+        <div class="card card-accent">
+          <h3>Broker Automation</h3>
+          <p>Tự động thu thập thông tin thị trường, phân tích kỹ thuật, gửi báo cáo cho broker/khách hàng.</p>
+          <p style="font-size:0.82em;color:var(--color-text-muted);margin-top:var(--space-sm)">Kênh: Telegram / WhatsApp. Impact trực tiếp với broker network.</p>
+        </div>
+        <div class="card card-accent">
+          <h3>NLQ Engine</h3>
+          <p>Natural Language Query — trả lời câu hỏi nghiệp vụ bằng ngôn ngữ tự nhiên, tự phục vụ dữ liệu.</p>
+          <p style="font-size:0.82em;color:var(--color-text-muted);margin-top:var(--space-sm)">Dân chủ hóa dữ liệu — business tự phục vụ, giảm tải team Analytic.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section class="slide-section">
+      <h2>Bước Tiếp theo</h2>
+      <p>Ưu tiên ngắn hạn để unblock team</p>
+    </section>
+
+    <!-- Next Steps -->
+    <section>
+      <h2>Ưu tiên Hành động</h2>
+      <div class="cols-2">
+        <div>
+          <div class="highlight-box" style="margin-bottom:var(--space-md)">
+            <p style="margin:0"><strong>Ngắn hạn (1–4 tuần)</strong></p>
+          </div>
+          <ul>
+            <li class="fragment">Quyết định bàn giao CMS về TTTK sản phẩm</li>
+            <li class="fragment">Xác nhận hướng đi CRM (self-build roadmap)</li>
+            <li class="fragment">Kick-off mở rộng quyền truy cập dữ liệu production</li>
+          </ul>
+        </div>
+        <div>
+          <div class="highlight-box" style="margin-bottom:var(--space-md)">
+            <p style="margin:0"><strong>Trung hạn (1–3 tháng)</strong></p>
+          </div>
+          <ul>
+            <li class="fragment">Setup analytic platform (PySpark / dbt / Notebook)</li>
+            <li class="fragment">Xây dựng business glossary & data dictionary cơ bản</li>
+            <li class="fragment">Resume AI for DA/DS — NLQ prototype</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q&A -->
+    <section>
+      <div class="slide-cover">
+        <div class="eyebrow">Câu hỏi & Thảo luận</div>
+        <h1>Cảm ơn!</h1>
+        <div class="subtitle">Đoàn Trung Hiếu — Analytic Team Lead</div>
+        <div class="meta">06/04/2026</div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/zoom/zoom.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    transition: 'slide',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    slideNumber: 'c/t',
+    showNotes: false,
+    controls: true,
+    progress: true,
+    center: true,
+    plugins: [ RevealHighlight, RevealNotes, RevealZoom ]
+  });
+</script>
+</body>
+</html>
